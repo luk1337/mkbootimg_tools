@@ -20,6 +20,7 @@ toolpath=$(readlink -f $0)
 tooldir=$(dirname $toolpath)
 mkbootimg=$tooldir/mkbootimg
 mkbootfs=$tooldir/mkbootfs
+LD_LIBRARY_PATH=$(pwd)
 C_OUT="\033[0;1m"
 C_ERR="\033[31;1m"
 C_CLEAR="\033[0;0m"
@@ -270,31 +271,31 @@ gzip -t ../ramdisk.packed 2>/dev/null
 if [ $? -eq 0 ]; then
     pout "ramdisk is gzip format."
     format=gzip
-    gzip -d -c ../ramdisk.packed | cpio -i -d -m  --no-absolute-filenames 2>/dev/null
+    gzip -d -c ../ramdisk.packed | cpio -i -d -m 2>/dev/null
     unpack_complete
 fi
 lzma -t ../ramdisk.packed 2>/dev/null
 if [ $? -eq 0 ]; then
     pout "ramdisk is lzma format."
     format=lzma
-    lzma -d -c ../ramdisk.packed | cpio -i -d -m  --no-absolute-filenames 2>/dev/null
+    lzma -d -c ../ramdisk.packed | cpio -i -d -m 2>/dev/null
     unpack_complete
 fi
 xz -t ../ramdisk.packed 2>/dev/null
 if [ $? -eq 0 ]; then
     pout "ramdisk is xz format."
     format=xz
-    xz -d -c ../ramdisk.packed | cpio -i -d -m  --no-absolute-filenames 2>/dev/null
+    xz -d -c ../ramdisk.packed | cpio -i -d -m 2>/dev/null
     unpack_complete
 fi
 lzop -t ../ramdisk.packed 2>/dev/null
 if [ $? -eq 0 ]; then
     pout "ramdisk is lzo format."
     format=lzop
-    lzop -d -c ../ramdisk.packed | cpio -i -d -m  --no-absolute-filenames 2>/dev/null
+    lzop -d -c ../ramdisk.packed | cpio -i -d -m 2>/dev/null
     unpack_complete
 fi
-$tooldir/lz4 -d ../ramdisk.packed 2>/dev/null | cpio -i -d -m  --no-absolute-filenames 2>/dev/null
+$tooldir/lz4 -d ../ramdisk.packed 2>/dev/null | cpio -i -d -m 2>/dev/null
 if [ $? -eq 0 ]; then
     pout "ramdisk is lz4 format."
     format=lz4
